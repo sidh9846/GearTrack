@@ -1,0 +1,22 @@
+<%- include('layout', { body: `
+  <h1>Inventory</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th><th>Category</th><th>Serial</th><th>Status</th><th>Checked Out By</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${items.map(i => `
+        <tr>
+          <td><a href="/inventory/${i.id}">${i.name}</a></td>
+          <td>${i.category}</td>
+          <td>${i.serial}</td>
+          <td><span class="${i.status === 'available' ? 'pill ok' : 'pill warn'}">${i.status}</span></td>
+          <td>${i.checked_out_by ? i.checked_out_by : '-'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+` }) %>

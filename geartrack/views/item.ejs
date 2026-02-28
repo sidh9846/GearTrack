@@ -1,0 +1,43 @@
+<%- include('layout', { body: `
+  <h1>${item.name}</h1>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Details</h2>
+      <p><b>Category:</b> ${item.category}</p>
+      <p><b>Serial:</b> ${item.serial}</p>
+      <p><b>Status:</b> <span class="${item.status === 'available' ? 'pill ok' : 'pill warn'}">${item.status}</span></p>
+      <p><b>Condition:</b> ${item.condition}</p>
+      <p><b>Notes:</b> ${item.notes ? item.notes : '-'}</p>
+    </div>
+
+    <div class="panel">
+      <h2>Checkout</h2>
+
+      ${
+        item.status === 'available'
+          ? `
+            <form method="POST" action="/inventory/${item.id}/checkout" class="form">
+              <label>Condition (required)</label>
+              <select name="checkout_condition" required>
+                ${CONDITIONS.map(c => `<option value="${c}">${c}</option>`).join('')}
+              </select>
+
+              <label>Notes (optional)</label>
+              <textarea name="checkout_notes" rows="3" placeholder="Optional"></textarea>
+
+              <button type="submit">Check Out</button>
+            </form>
+          `
+          : `
+            <p><b>Currently checked out by:</b> ${activeCheckout ? activeCheckout.display_name : 'Unknown'}</p>
+            <p>Checkout date: ${activeCheckout ? activeCheckout.checkout_at : '-'}</p>
+            <p>Checkout condition: ${activeCheckout ? activeCheckout.checkout_condition : '-'}</p>
+            <p>You can return it from <a href="/my-equipment">My Equipment</a> if it’s yours.</p>
+          `
+      }
+    </div>
+  </div>
+
+  <p><a href="/inventory">Back to inventory</a></p>
+` }) %>

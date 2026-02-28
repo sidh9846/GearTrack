@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>GearTrack</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand"><a href="/">GearTrack</a></div>
+    <nav class="nav">
+      <% if (currentUser) { %>
+        <% if (currentUser.role === 'user') { %>
+          <a href="/inventory">Inventory</a>
+          <a href="/my-equipment">My Equipment</a>
+          <a href="/log">Log</a>
+        <% } else { %>
+          <a href="/admin">Admin</a>
+          <a href="/admin/users">Users</a>
+          <a href="/admin/equipment">Equipment</a>
+        <% } %>
+        <form method="POST" action="/logout" class="inline">
+          <button type="submit">Logout (<%= currentUser.display_name %>)</button>
+        </form>
+      <% } %>
+    </nav>
+  </header>
+
+  <main class="container">
+    <%- body %>
+  </main>
+</body>
+</html>

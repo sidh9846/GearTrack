@@ -1,0 +1,36 @@
+<%
+  const isEdit = mode === 'edit';
+  const title = isEdit ? 'Edit Equipment' : 'Add Equipment';
+  const action = isEdit ? `/admin/equipment/${item.id}/edit` : '/admin/equipment/new';
+%>
+
+<%- include('layout', { body: `
+  <h1>${title}</h1>
+
+  ${error ? `<div class="error">${error}</div>` : ''}
+
+  <form method="POST" action="${action}" class="form">
+    <label>Name</label>
+    <input name="name" required value="${item?.name ?? ''}" />
+
+    <label>Category</label>
+    <select name="category" required>
+      ${CATEGORIES.map(c => `<option value="${c}" ${item?.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+    </select>
+
+    <label>Serial</label>
+    <input name="serial" required value="${item?.serial ?? ''}" />
+
+    <label>Condition</label>
+    <select name="condition" required>
+      ${CONDITIONS.map(c => `<option value="${c}" ${item?.condition === c ? 'selected' : ''}>${c}</option>`).join('')}
+    </select>
+
+    <label>Notes (optional)</label>
+    <textarea name="notes" rows="3">${item?.notes ?? ''}</textarea>
+
+    <button type="submit">${isEdit ? 'Save Changes' : 'Create Item'}</button>
+  </form>
+
+  <p><a href="/admin/equipment">Back</a></p>
+` }) %>

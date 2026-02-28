@@ -1,0 +1,15 @@
+<%- include('layout', { body: `
+  <h1>Welcome to GearTrack</h1>
+  <p>Select a login type:</p>
+
+  <div class="cards">
+    <a class="card" href="/login?role=user">
+      <h2>User Login</h2>
+      <p>View inventory, check out and return equipment.</p>
+    </a>
+    <a class="card" href="/login?role=admin">
+      <h2>Admin Login</h2>
+      <p>Manage users and equipment inventory.</p>
+    </a>
+  </div>
+` }) %>

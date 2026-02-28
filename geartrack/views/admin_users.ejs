@@ -1,0 +1,37 @@
+<%- include('layout', { body: `
+  <h1>Manage Users</h1>
+
+  ${error ? `<div class="error">${error}</div>` : ''}
+
+  <h2>Create User</h2>
+  <form method="POST" action="/admin/users" class="form">
+    <label>Username</label>
+    <input name="username" required placeholder="e.g., manveer" />
+
+    <label>Display Name</label>
+    <input name="display_name" required placeholder="e.g., Manveer" />
+
+    <label>Role</label>
+    <select name="role" required>
+      <option value="user">user</option>
+      <option value="admin">admin</option>
+    </select>
+
+    <button type="submit">Create</button>
+  </form>
+
+  <h2>Existing Users</h2>
+  <table>
+    <thead><tr><th>Display Name</th><th>Username</th><th>Role</th><th>Created</th></tr></thead>
+    <tbody>
+      ${users.map(u => `
+        <tr>
+          <td>${u.display_name}</td>
+          <td>@${u.username}</td>
+          <td>${u.role}</td>
+          <td>${u.created_at}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+` }) %>

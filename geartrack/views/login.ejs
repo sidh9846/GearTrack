@@ -1,0 +1,18 @@
+<%- include('layout', { body: `
+  <h1>${role === 'admin' ? 'Admin' : 'User'} Login</h1>
+
+  ${error ? `<div class="error">${error}</div>` : ''}
+
+  <form method="POST" action="/login" class="form">
+    <input type="hidden" name="role" value="${role}" />
+
+    <label>Select account</label>
+    <select name="userId" required>
+      ${users.map(u => `<option value="${u.id}">${u.display_name} (@${u.username})</option>`).join('')}
+    </select>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p><a href="/">Back</a></p>
+` }) %>

@@ -1,0 +1,32 @@
+<%- include('layout', { body: `
+  <h1>My Equipment</h1>
+
+  ${items.length === 0 ? `<p>You have no checked-out items.</p>` : `
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th><th>Serial</th><th>Checked Out At</th><th>Checkout Condition</th><th>Return</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${items.map(i => `
+          <tr>
+            <td>${i.name}</td>
+            <td>${i.serial}</td>
+            <td>${i.checkout_at}</td>
+            <td>${i.checkout_condition}</td>
+            <td>
+              <form method="POST" action="/my-equipment/${i.checkout_id}/return" class="inline">
+                <select name="return_condition" required>
+                  ${CONDITIONS.map(c => `<option value="${c}">${c}</option>`).join('')}
+                </select>
+                <input name="return_notes" placeholder="Optional notes" />
+                <button type="submit">Return</button>
+              </form>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `}
+` }) %>

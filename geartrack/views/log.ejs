@@ -1,0 +1,24 @@
+<%- include('layout', { body: `
+  <h1>Activity Log</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date Out</th><th>Date Returned</th><th>User</th><th>Item</th><th>Serial</th><th>Out Cond</th><th>Return Cond</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rows.map(r => `
+        <tr>
+          <td>${r.checkout_at}</td>
+          <td>${r.return_at ? r.return_at : '-'}</td>
+          <td>${r.user_name}</td>
+          <td>${r.equipment_name}</td>
+          <td>${r.equipment_serial}</td>
+          <td>${r.checkout_condition}</td>
+          <td>${r.return_condition ? r.return_condition : '-'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+` }) %>
