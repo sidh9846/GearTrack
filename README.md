@@ -1,58 +1,110 @@
 # DJ & A-V Equipment Inventory Management System
 
+---
+
 ## Project Overview
 
-The application is designed to manage shared DJ and A-V equipment by tracking inventory items, equipment availability, and check-in/check-out activity.  
-The system provides a centralized way to record which equipment is available, who has borrowed items, and a historical log of all equipment usage.
+The DJ & A-V Equipment Inventory Management System (GearTrack) is a full-stack web application designed to manage shared DJ and audio-visual equipment. The system tracks inventory items, equipment availability, borrower information, and complete check-in/check-out history.
+
+The application provides a centralized, structured alternative to spreadsheets or informal tracking methods, improving accountability, accuracy, and visibility of shared equipment usage.
 
 ---
 
 ## Problem Addressed
 
-Managing shared DJ and A-V equipment using spreadsheets, paper logs, or messages makes it difficult to:
+Managing shared DJ and A-V equipment using spreadsheets, paper logs, or informal communication makes it difficult to:
 
 - Know which equipment is currently available
 - Track who has borrowed equipment and when
-- Maintain accountability and usage history
+- Prevent double bookings or lost equipment
+- Maintain accurate historical usage records
 
-This application solves these issues by providing a structured inventory and checkout tracking system backed by a relational database.
+This application solves these issues by implementing a structured inventory and checkout system backed by a relational database.
 
 ---
 
 ## Core Features
 
-- Add, edit, and delete equipment items
-- View a complete inventory list with availability status
-- Create user (borrower) records
-- Check equipment out
-- Check equipment back in
-- Prevent invalid actions (e.g., double checkout)
-- Maintain a historical log of all check-in and check-out activity
+- Add, edit, and delete equipment items (Admin)
+- View complete inventory with availability status
+- Create and manage user (borrower) accounts (Admin)
+- Check equipment out (condition required)
+- Check equipment back in (return condition required)
+- Prevent invalid actions (e.g., double checkout of same item)
+- Maintain a historical activity log of all transactions
 
 ---
 
 ## Technology Stack
 
-**TBD**
+The application is built using only course-approved technologies:
+
+- **Backend:** Node.js with Express
+- **Database:** SQLite (relational database)
+- **Frontend:** HTML, CSS, EJS (server-rendered templates)
+- **Version Control:** GitHub
+- **Project Management:** Kanban board
 
 ---
 
 ## Data Model
 
-The system is built around the following main entities:
+The system is built around three main relational entities:
 
-- **Users** – borrowers of equipment  
-- **Equipment** – inventory items (lights, mixers, cables, etc.)  
-- **Checkouts** – records of equipment loans and returns  
+### Users
+Represents borrowers of equipment.
+
+### Equipment
+Represents individual inventory items (controllers, mixers, speakers, lighting, etc.).  
+Each item tracks its category, serial number, status, and current condition.
+
+### Checkouts
+Represents transaction records connecting Users and Equipment.  
+Tracks:
+- Checkout timestamp
+- Return timestamp
+- Checkout condition
+- Return condition
+- Optional notes
+
+An equipment item may have many historical checkout records, but only one active checkout at a time.
 
 ---
 
-## Project Status
+## How to Run the Application Locally
 
-**Current Stage:**  
-Milestone 01 – Planning and Design
+### Prerequisites
 
-- Project proposal completed
-- User stories and acceptance criteria defined
-- Data planning completed
-- GitHub repository and Kanban board initialized
+Make sure the following is installed:
+
+- Node.js (LTS version recommended)
+- npm (comes with Node.js)
+
+### Verify installation:
+
+```bash
+node -v
+npm -v
+```
+
+### Clone the Repository
+
+```bash
+git clone <repository-url>
+cd <repository-folder>
+```
+
+### Install Dependencies
+```bash
+npm install
+```
+
+### Start the Server
+```bash
+npm start
+```
+
+### Access the Application
+```bash
+http://localhost:3000
+```
