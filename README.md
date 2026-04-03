@@ -71,6 +71,29 @@ An equipment item may have many historical checkout records, but only one active
 
 ---
 
+## Login Information
+
+Default accounts for testing:
+
+**Admin Account**
+- Username: admin
+- Password: geartrack123
+
+**User Account**
+- Username: user1
+- Password: geartrack123
+
+---
+
+## Database
+
+- The application uses SQLite.
+- The database is automatically created on first run.
+- Seed data is included for testing purposes.
+- Data includes users, equipment, and checkout records.
+
+---
+
 ## How to Run the Application Locally
 
 ### Prerequisites
