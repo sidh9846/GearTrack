@@ -1,9 +1,7 @@
 const express = require("express");
 const { db } = require("../db/db");
+const { CONDITIONS, validateConditionAndNotes } = require("../utils/validation");
 const router = express.Router();
-
-const CATEGORIES = ["Controller", "Mixer", "Speaker", "Microphone", "Lighting", "Stand", "Accessory"];
-const CONDITIONS = ["Excellent", "Good", "Fair", "Damaged"];
 
 function requireUser(req, res, next) {
   if (!req.session.user) return res.redirect("/");
@@ -77,10 +75,13 @@ router.get("/inventory/:id", requireUser, requireNonAdmin, (req, res) => {
 router.post("/inventory/:id/checkout", requireUser, requireNonAdmin, (req, res) => {
   const equipmentId = Number(req.params.id);
   const userId = req.session.user.id;
-  const { checkout_condition, checkout_notes } = req.body;
+  const { error, cleanCondition, cleanNotes } = validateConditionAndNotes(
+    req.body.checkout_condition,
+    req.body.checkout_notes
+  );
 
-  if (!CONDITIONS.includes(checkout_condition)) {
-    return res.status(400).send("Invalid condition");
+  if (error) {
+    return res.status(400).send(error);
   }
 
   const item = db.prepare("SELECT * FROM equipment WHERE id = ?").get(equipmentId);
@@ -93,11 +94,12 @@ router.post("/inventory/:id/checkout", requireUser, requireNonAdmin, (req, res) 
       INSERT INTO checkouts (equipment_id, user_id, checkout_condition, checkout_notes)
       VALUES (?, ?, ?, ?)
       `
-    ).run(equipmentId, userId, checkout_condition, checkout_notes || null);
+    ).run(equipmentId, userId, cleanCondition, cleanNotes);
 
-    db.prepare(
-      `UPDATE equipment SET status = 'checked_out', condition = ? WHERE id = ?`
-    ).run(checkout_condition, equipmentId);
+    db.prepare(`UPDATE equipment SET status = 'checked_out', condition = ? WHERE id = ?`).run(
+      cleanCondition,
+      equipmentId
+    );
   });
 
   try {
@@ -129,10 +131,13 @@ router.get("/my-equipment", requireUser, requireNonAdmin, (req, res) => {
 router.post("/my-equipment/:checkoutId/return", requireUser, requireNonAdmin, (req, res) => {
   const checkoutId = Number(req.params.checkoutId);
   const userId = req.session.user.id;
-  const { return_condition, return_notes } = req.body;
+  const { error, cleanCondition, cleanNotes } = validateConditionAndNotes(
+    req.body.return_condition,
+    req.body.return_notes
+  );
 
-  if (!CONDITIONS.includes(return_condition)) {
-    return res.status(400).send("Invalid condition");
+  if (error) {
+    return res.status(400).send(error);
   }
 
   const checkout = db
@@ -155,11 +160,12 @@ router.post("/my-equipment/:checkoutId/return", requireUser, requireNonAdmin, (r
           return_notes = ?
       WHERE id = ?
       `
-    ).run(return_condition, return_notes || null, checkoutId);
+    ).run(cleanCondition, cleanNotes, checkoutId);
 
-    db.prepare(
-      `UPDATE equipment SET status = 'available', condition = ? WHERE id = ?`
-    ).run(return_condition, checkout.equipment_id);
+    db.prepare(`UPDATE equipment SET status = 'available', condition = ? WHERE id = ?`).run(
+      cleanCondition,
+      checkout.equipment_id
+    );
   });
 
   tx();

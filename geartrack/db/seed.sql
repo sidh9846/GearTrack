@@ -1,9 +1,10 @@
 -- MOCK DATA --
+-- Default seeded password for all accounts: geartrack123
 
-INSERT INTO users (username, display_name, role) VALUES
-('admin', 'Admin', 'admin'),
-('alex', 'Alex', 'user'),
-('sam', 'Sam', 'user');
+INSERT INTO users (username, display_name, role, password_hash) VALUES
+('admin', 'Admin', 'admin', '__HASH__'),
+('alex', 'Alex', 'user', '__HASH__'),
+('sam', 'Sam', 'user', '__HASH__');
 
 INSERT INTO equipment (name, category, serial, notes, status, condition) VALUES
 ('Pioneer DDJ-1000', 'Controller', 'SN-DDJ1000-001', 'Main controller', 'available', 'Good'),

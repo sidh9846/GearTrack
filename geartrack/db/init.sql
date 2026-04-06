@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   username TEXT NOT NULL UNIQUE,
   display_name TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('admin','user')),
+  password_hash TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -37,4 +38,5 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_one_active_checkout_per_equipment
 ON checkouts(equipment_id)
 WHERE return_at IS NULL;
 
-
+CREATE UNIQUE INDEX IF NOT EXISTS idx_equipment_serial_unique
+ON equipment(serial);

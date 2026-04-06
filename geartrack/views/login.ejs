@@ -6,13 +6,15 @@
   <form method="POST" action="/login" class="form">
     <input type="hidden" name="role" value="${role}" />
 
-    <label>Select account</label>
-    <select name="userId" required>
-      ${users.map(u => `<option value="${u.id}">${u.display_name} (@${u.username})</option>`).join('')}
-    </select>
+    <label>Username</label>
+    <input name="username" required value="${formData?.username ?? ''}" placeholder="Enter username" />
+
+    <label>Password</label>
+    <input type="password" name="password" required placeholder="Enter password" />
 
     <button type="submit">Login</button>
   </form>
 
+  <p class="muted">For demo accounts, the default password is <b>geartrack123</b>.</p>
   <p><a href="/">Back</a></p>
 ` }) %>

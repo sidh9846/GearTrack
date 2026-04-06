@@ -6,23 +6,49 @@
   <h2>Create User</h2>
   <form method="POST" action="/admin/users" class="form">
     <label>Username</label>
-    <input name="username" required placeholder="e.g., manveer" />
+    <input name="username" required placeholder="e.g., manveer" value="${createForm?.username ?? ''}" />
 
     <label>Display Name</label>
-    <input name="display_name" required placeholder="e.g., Manveer" />
+    <input name="display_name" required placeholder="e.g., Manveer" value="${createForm?.display_name ?? ''}" />
 
     <label>Role</label>
     <select name="role" required>
-      <option value="user">user</option>
-      <option value="admin">admin</option>
+      <option value="user" ${(createForm?.role ?? 'user') === 'user' ? 'selected' : ''}>user</option>
+      <option value="admin" ${createForm?.role === 'admin' ? 'selected' : ''}>admin</option>
     </select>
+
+    <label>Password</label>
+    <input type="password" name="password" required placeholder="Minimum 8 characters" />
 
     <button type="submit">Create</button>
   </form>
 
+  ${editUser ? `
+    <h2>Edit User</h2>
+    <form method="POST" action="/admin/users/${editUser.id}/edit" class="form">
+      <label>Username</label>
+      <input name="username" required value="${editForm?.username ?? editUser.username}" />
+
+      <label>Display Name</label>
+      <input name="display_name" required value="${editForm?.display_name ?? editUser.display_name}" />
+
+      <label>Role</label>
+      <select name="role" required>
+        <option value="user" ${(editForm?.role ?? editUser.role) === 'user' ? 'selected' : ''}>user</option>
+        <option value="admin" ${(editForm?.role ?? editUser.role) === 'admin' ? 'selected' : ''}>admin</option>
+      </select>
+
+      <label>New Password</label>
+      <input type="password" name="password" required placeholder="Enter a replacement password" />
+
+      <button type="submit">Save User</button>
+    </form>
+    <p><a href="/admin/users">Cancel edit</a></p>
+  ` : ''}
+
   <h2>Existing Users</h2>
   <table>
-    <thead><tr><th>Display Name</th><th>Username</th><th>Role</th><th>Created</th></tr></thead>
+    <thead><tr><th>Display Name</th><th>Username</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
     <tbody>
       ${users.map(u => `
         <tr>
@@ -30,8 +56,15 @@
           <td>@${u.username}</td>
           <td>${u.role}</td>
           <td>${u.created_at}</td>
+          <td>
+            <a href="/admin/users/${u.id}/edit">Edit</a>
+            <form method="POST" action="/admin/users/${u.id}/delete" class="inline" onsubmit="return confirm('Delete this user?');">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
         </tr>
       `).join('')}
     </tbody>
   </table>
+  <p class="muted">Users with active checkouts cannot be deleted.</p>
 ` }) %>

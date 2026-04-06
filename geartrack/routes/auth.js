@@ -1,32 +1,47 @@
 const express = require("express");
 const { db } = require("../db/db");
+const { normalizeText } = require("../utils/validation");
+const { verifyPassword } = require("../utils/security");
 const router = express.Router();
+
+function renderLogin(res, role, error = null, formData = {}) {
+  res.render("login", {
+    role,
+    error,
+    formData: {
+      username: formData.username || "",
+    },
+  });
+}
 
 router.get("/login", (req, res) => {
   const role = req.query.role === "admin" ? "admin" : "user";
-  const users = db
-    .prepare("SELECT id, username, display_name FROM users WHERE role = ? ORDER BY display_name")
-    .all(role);
-
-  res.render("login", { role, users, error: null });
+  renderLogin(res, role);
 });
 
 router.post("/login", (req, res) => {
-  const { userId, role } = req.body;
+  const username = normalizeText(req.body.username).toLowerCase();
+  const password = typeof req.body.password === "string" ? req.body.password : "";
+  const role = req.body.role === "admin" ? "admin" : "user";
 
-  const user = db
-    .prepare("SELECT id, username, display_name, role FROM users WHERE id = ?")
-    .get(userId);
-
-  if (!user || user.role !== role) {
-    const users = db
-      .prepare("SELECT id, username, display_name FROM users WHERE role = ? ORDER BY display_name")
-      .all(role);
-    return res.render("login", { role, users, error: "Invalid selection. Try again." });
+  if (!username || !password) {
+    return renderLogin(res, role, "Enter both username and password.", { username });
   }
 
-  // Simple session login (security can be improved later)
-  req.session.user = user;
+  const user = db
+    .prepare("SELECT id, username, display_name, role, password_hash FROM users WHERE username = ?")
+    .get(username);
+
+  if (!user || user.role !== role || !verifyPassword(password, user.password_hash)) {
+    return renderLogin(res, role, "Invalid username, password, or role.", { username });
+  }
+
+  req.session.user = {
+    id: user.id,
+    username: user.username,
+    display_name: user.display_name,
+    role: user.role,
+  };
 
   if (user.role === "admin") return res.redirect("/admin");
   return res.redirect("/user");
